@@ -1,0 +1,219 @@
+/* need to set up styling for unordered lists, links and paragraphs*/
+
+body {
+    background-color: #222222;
+    margin-top: 16vh; margin-left: 13vw; margin-right: 0px; margin-bottom: 0px;
+}
+
+h1 {
+    color: green;
+    text-align: center;
+    font-size: 2.5vw;
+}
+
+h2 {
+    color: blue;
+    text-align: center;
+    font-size: 2.5vw;
+}
+
+p {
+    align-content: left;
+    color: green;
+    font-size: 2vw;
+}
+
+a:link, a:visited {
+    color: green;
+    text-decoration: none;
+}
+
+a:hover {
+    color: blue;
+    text-decoration: none;
+}
+
+
+
+
+/*classes*/
+
+.header {
+    position: absolute;
+    right: 0px; left: 12vw; top: 0px;
+    height: 16vh;
+    background: #333333;
+}
+
+.sidebar{
+    position: fixed;
+    top: 16vh; bottom: 0px; left: 0px;
+    width: 12vw;
+    background: #333333;
+}
+.logoholder{
+    position:fixed;
+    top: 0px; left:0px; 
+    height: 16vh;
+    width:12vw;
+    background: #636363;
+}
+
+.socalMedia {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 12vw;
+    height: 10vh;
+}
+
+img.align-right { 
+    float: right;
+     margin-left: 5%;
+     margin-right: 2%;
+} 
+img.align-left { 
+    float: left; 
+margin-right: 5%;
+}
+
+ul #listHeader {
+    color: green;
+    list-style: none;
+}
+
+ul {
+    color: green;
+   font-size: 2vw;
+}
+
+img#logo{
+    padding-left: 4%;
+    padding-top: 10%;
+    height: 30px;
+    width: auto;
+}
+
+
+#header{
+    color: green;
+    margin: 4vh;
+    text-align: center;
+    text-shadow: 3px 3px black;
+    font-size: 5vw;
+}
+
+
+ul#sidebar{
+    font-size: 1.75vw;
+    margin-left: .25vw; 
+    align-content: left;
+    color: green;
+    text-decoration: none;
+}
+
+
+#icon {
+    white-space: nowrap;
+    vertical-align: center;
+    height: auto;
+    width: 3vw;
+    padding: .35vw;
+}
+
+img#green {
+    border: 1em double blue;
+    margin: 10px;
+}
+
+img#orange { 
+    border: 1em double green;
+    margin: 10px;
+}
+
+/* Bar Graph Code - help from https://www.otreva.com/blog/create-a-htmlcss-horizontal-bar-graph/ for an exsample */
+
+.bargraph{
+    list-style: none;
+    padding-top:1.25vw;
+    width: 30vw;
+    padding-right:3vw;
+    padding-left: .75vw;
+    padding-bottom: .75vh;
+    background: #636363;
+    border-radius: 10px;
+}
+
+ul.bargraph li{
+    height:4.5vh;
+    color: #222222;
+    text-align: left;
+    font-weight: bolder;
+    font-size: 2vw;
+    line-height: 4.5vh;
+    padding: 0px 1.25vw;
+    margin-bottom: .5vh;
+    text-align: right;
+    border: 2px solid #222222;
+    border-radius: 10px;
+}
+
+ul.bargraph li.title{
+    border: none;
+    color: #222222;
+    text-align: center;
+    font-size: 2vw;
+}
+
+ul.bargraph li.level10{
+    background: green;
+    width:100%;
+}
+
+ul.bargraph li.level9{
+    background: green;
+    width:90%;
+}
+
+ul.bargraph li.level8{
+    background: green;
+    width:80%;
+}
+
+ul.bargraph li.level7{
+    background: green;
+    width:70%;
+}
+
+ul.bargraph li.level6{
+    background: green;
+    width:60%;
+}
+
+ul.bargraph li.level5{
+    background: green;
+    width:50%;
+}
+
+ul.bargraph li.level4{
+    background: green;
+    width:40%;
+}
+
+ul.bargraph li.level3{
+    background: green;
+    width:30%;
+}
+
+ul.bargraph li.level2{
+    background: green;
+    width:20%;
+}
+
+ul.bargraph li.level1{
+    background: green;
+    width:10%;
+}
+
+
+
