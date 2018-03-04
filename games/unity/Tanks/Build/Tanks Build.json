@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "Tanks Build.data.unityweb",
+"asmCodeUrl": "Tanks Build.asm.code.unityweb",
+"asmMemoryUrl": "Tanks Build.asm.memory.unityweb",
+"asmFrameworkUrl": "Tanks Build.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#747070"
+}

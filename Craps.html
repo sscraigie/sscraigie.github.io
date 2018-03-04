@@ -1,0 +1,611 @@
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html>
+        <head>
+            <title>Austin Craigie - Craps</title>
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header">
+                <p id="header"> Austin Craigie - Craps</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "auto" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+            <h2>Craps the Game:</h2>
+            <center><img class = "align-right" id="orange" width = "25%" height="auto" src="pics/Craps.jpg"/></center>
+
+            <p style="padding-left: 3%">Craps was one of the first games I programmed using the C language my freashman year in collage. <br><br><br><br><br><br></p>
+
+	    <p style ="padding-left: 3%">Sorry but this code is currently hidden as I TA for the class I wrote this for. <br><br> Thank you --Austin</p>
+           <!-- <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+            <div class="tab">
+            <button class="tablinks" onclick="openFile(event, 'Main.c')" id="defaultOpen">Main.c</button>
+            <button class="tablinks" onclick="openFile(event, 'Header.h')">Header.h</button>
+            <button class="tablinks" onclick="openFile(event, 'Craps.c')">Craps.c</button>
+            </div>
+
+            <div id="Header.h" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-c">
+                /*Name: Austin Craigie
+                Class: Cpts 121, fall 2016, Lab Section 05
+                Programming Assignment: PA 4
+                Date: 10/5/2016
+                Description: This is the game, craps
+                File:header.h
+                */
+
+                #ifndef PA4_H
+                #define PA4_H
+                #define _CRT_SECURE_NO_WARNINGS
+                #include &lt;stdio.h&lt;;
+                #include &lt;time.h&lt;;
+                #include &lt;stdlib.h&lt;;
+
+                /*Funciton: print_game_rules
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will desplay the game rules*/
+                void print_game_rules(void);
+
+                /*Funciton: get_bank_balance
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will get a starting balace from the user*/
+                double get_bank_balance(void);
+
+                /*Funciton: get_wager_amount
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will get the players bet for that round*/
+                double get_wager_amount(double bank);
+
+                /*Funciton: check_wager_amount
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will check to make sure the player has enough money for bet*/
+                int check_wager_amount(double wager, double balance);
+
+                /*Funciton: roll_die
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will role one die*/
+                int roll_die(void);
+
+                /*Funciton: calculate_sum_dice
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will take two dice rolls and return the sum*/
+                int calculate_sum_dice(int die1_value, int die2_value);
+
+                /*Funciton: is_win_loss_or_point
+                date created: 9/29/16
+                programmer: Austin Craigie
+                date modified: 9/29/16
+                programmer: Austin Craigie
+                description: will detumen if it is a win(1), loss(0) or point(-1)*/
+                int is_win_loss_or_point(int sum_dice);
+
+                /*Funciton: is_point_loss_or_neither
+                date created: 9/30/16
+                programmer: Austin Craigie
+                date modified: 9/30/16
+                programmer: Austin Craigie
+                description: will detumen if it is a win(1), loss(0) or neither(-1)*/
+                int is_point_loss_or_neither(int sum_dice, int point_value);
+
+                /*Funciton: adjust_bank_balance
+                date created: 9/30/16
+                programmer: Austin Craigie
+                date modified: 9/30/16
+                programmer: Austin Craigie
+                description: will take the player's bet and add it to the balace if they win, or subtract
+                it if they loose*/
+                double adjust_bank_balance(double bank_balance, double wager_amount, int
+                add_or_subtract);
+
+                /*Funciton: end_game
+                date created: 9/30/16
+                programmer: Austin Craigie
+                date modified: 9/30/16
+                programmer: Austin Craigie
+                description: will desplay game stats*/
+                void chatter_messages(int number_rolls, int win_loss_neither, double
+                initial_bank_balance, double current_bank_balance, int number_of_games);
+
+                /*Funciton: end_game
+                date created: 9/30/16
+                programmer: Austin Craigie
+                date modified: 9/30/16
+                programmer: Austin Craigie
+                description: will ask the player if they want to end the game*/
+                int end_game(double bank);
+
+                /*Funciton: display_dice
+                date created: 10/5/16
+                programmer: Austin Craigie
+                date modified: 10/5/16
+                programmer: Austin Craigie
+                description: will diplay one die
+                NOTE: Idea from fellow student: Hunter McCullough*/
+                void display_dice(int die);
+
+                /*Funciton: roll_data
+                date created: 10/6/16
+                programmer: Austin Craigie
+                date modified: 10/6/16
+                programmer: Austin Craigie
+                description: will display the dice and the roll number after each roll*/
+                void roll_data(int die1, int die2, int roll_count, int point);
+                #endif
+                  </code></pre>
+            </div>
+
+            <div id="Craps.c" class="tabcontent">
+                 <pre id ="code" class="prettyprint">
+                    <code class = "language-c">
+                        /*Name: Austin Craigie
+                        Class: Cpts 121, fall 2016, Lab Section 05
+                        Programming Assignment: PA 4
+                        Date: 10/5/2016
+                        Description: This is the game, craps
+                        File: Craps.c
+                        */
+
+                        #include "header.h"
+
+                        /*Funciton: print_game_rules
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will desplay the game rules*/
+
+                        void print_game_rules(void)
+                        {
+                        printf("WELCOME TO THE COMPUTER SCIENCE CASINO\n\n");
+                        printf("Here are the rules:\n");
+                        printf("You will roll two dice, and the sum of the dice will be added up.\n");
+                        printf("If the sum of the dice is 7 or 11 YOU WIN!!!\nbut if the sum is 2,3,12 you
+                        loose\n");
+                        printf("Any other sum will become The Point, here you will keep rolling untill you
+                        either get The Point, YOU WIN!!!!\n");
+                        printf("Or a 7, you loose, have fun and bet wisly\n");
+                        printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                        $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
+                        }
+
+                        /*Funciton: get_bank_balance
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will get a starting balace from the user*/
+
+                        double get_bank_balance(void)
+                        {
+                        double balance = 0.0;
+                        printf("Please provide a staring bank balance: $");
+                        scanf("%lf", &balance);
+                        system("cls");
+                        return balance;
+                        }
+
+                        /*Funciton: get_wager_amount
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will get the players bet for that round*/
+
+                        double get_wager_amount(double balance)
+                        {
+                        double bet = 0.0;
+                        printf("bank balance $%.2lf \n", balance);
+                        printf("what would you like to bet for this round: $");
+                        scanf("%lf", &bet);
+                        return bet;
+                        }
+
+                        /*Funciton: check_wager_amount
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will check to make sure the player has enough money for bet*/
+
+                        int check_wager_amount(double wager, double balance)
+                        {
+                        int check = 0;
+                        if (wager <= balance)
+                        {
+                        check = 1;
+                        }
+                        else
+                        {
+                        printf("please provide a wager less then the amout in your bank. \t\t Bank:
+                        $%.2lf\n", balance);
+                        }
+                        return check;
+                        }
+
+                        /*Funciton: roll_die
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will role one die*/
+
+                        int roll_die(void)
+                        {
+                        int roll = 0;
+                        roll = rand() % 6 + 1;
+                        return roll;
+                        }
+                        
+                        /*Funciton: calculate_sum_dice
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will take two dice rolls and return the sum*/
+
+                        int calculate_sum_dice(int die1_value, int die2_value)
+                        {
+                        int sum = 0;
+                        sum = die1_value + die2_value;
+                        return sum;
+                        }
+                       
+                        /*Funciton: is_win_loss_or_point
+                        date created: 9/29/16
+                        programmer: Austin Craigie
+                        date modified: 9/29/16
+                        programmer: Austin Craigie
+                        description: will detumen if it is a win(1), loss(0) or point(-1)*/
+
+                        int is_win_loss_or_point(int sum_dice)
+                        {
+                        int check = 0;
+                        if ((sum_dice == 7) || (sum_dice == 11))
+                        {
+                        //win
+                        check = 1;
+                        }
+                        else if (((sum_dice == 2) || (sum_dice == 3)) || (sum_dice == 12))
+                        {
+                        //lose
+                        check = 0;
+                        }
+                        else
+                        {
+                        //point
+                        check = -1;
+                        }
+                        return check;
+                        }
+                        
+                        /*Funciton: is_point_loss_or_neither
+                        date created: 9/30/16
+                        programmer: Austin Craigie
+                        date modified: 9/30/16
+                        programmer: Austin Craigie
+                        description: will detumen if it is a win(1), loss(0) or neither(-1)*/
+
+                        int is_point_loss_or_neither(int sum_dice, int point_value)
+                        {
+                        int check = 0;
+                        if ((sum_dice == point_value))
+                        {
+                        //win
+                        check = 1;
+                        }
+                        else if (sum_dice == 7)
+                        {
+                        //lose
+                        check = 0;
+                        }
+                        else
+                        {
+                        //neither
+                        check = -1;
+                        }
+                        return check;
+                        }
+                       
+                        /*Funciton: adjust_bank_balance
+                        date created: 9/30/16
+                        programmer: Austin Craigie
+                        date modified: 9/30/16
+                        programmer: Austin Craigie
+                        description: will take the player's bet and add it to the balace if they win, or subtract
+                        it if they loose*/
+
+                        double adjust_bank_balance(double bank_balance, double wager_amount, int add_or_subtract)
+                        {
+                        double update = 0.0;
+                        if (add_or_subtract == 1)
+                        {
+                        update = bank_balance + wager_amount;
+                        }
+                        else if (add_or_subtract == 0)
+                        {
+                        update = bank_balance - wager_amount;
+                        }
+                        return update;
+                        }
+                        void chatter_messages(int number_rolls, int win_loss_neither, double
+                        initial_bank_balance, double current_bank_balance, int number_of_games)
+                        {
+                        if (win_loss_neither == 1)
+                        {
+                        printf("YOU WIN!!!!!!!! \t");
+                        }
+                        else
+                        {
+                        printf("YOU LOSE :(\t");
+                        }
+                        printf("Number of Rolls for this game: %d\t", number_rolls);
+                        printf("Number of games: %d\n", number_of_games);
+                        printf("Your Starting bank balace was: $%.2lf \t your current bank balance is:
+                        $%.2lf\n", initial_bank_balance, current_bank_balance);
+                        }
+                       
+                        /*Funciton: end_game
+                        date created: 9/30/16
+                        programmer: Austin Craigie
+                        date modified: 9/30/16
+                        programmer: Austin Craigie
+                        description: will as the player if they want to end the game*/
+
+                        int end_game(double bank)
+                        {
+                        char answer = '\0';
+                        int check = 3;
+                        do {
+                        if (bank == 0)
+                        {
+                        printf("BANKRUPT!!!!!!! you lose :(\n");
+                        check = 0;
+                        }
+                        else
+                        {
+                        printf("do you want to play again?:(y or n) ");
+                        scanf(" %c", &answer);
+                        if (answer == 'y')
+                        {
+                        check = 1;
+                        system("cls");
+                        }
+                        else if (answer == 'n')
+                        {
+                        check = 0;
+                        }
+                        }
+                        } while ((check != 1) && (check != 0));
+                        return check;
+                        }
+                       
+                        /*Funciton: display_dice
+                        date created: 10/5/16
+                        programmer: Austin Craigie
+                        date modified: 10/5/16
+                        programmer: Austin Craigie
+                        description: will diplay one die
+                        NOTE: Idea from fellow student: Hunter McCullough*/
+
+                        void display_dice(int die)
+                        {
+                        switch (die)
+                        {
+                        case 1:
+                        printf(" _______\n");
+                        printf("|       |\n");
+                        printf("|   @   |\n");
+                        printf("|_______|\n");
+                        break;
+                        case 2:
+                        printf(" _______\n");
+                        printf("| @     |\n");
+                        printf("|       |\n");
+                        printf("|_____@_|\n");
+                        break;
+                        case 3:
+                        printf(" _______\n");
+                        printf("| @     |\n");
+                        printf("|   @   |\n");
+                        printf("|_____@_|\n");
+                        break;
+                        case 4:
+                        printf(" _______\n");
+                        printf("| @   @ |\n");
+                        printf("|       |\n");
+                        printf("|_@___@_|\n");
+                        break;
+                        case 5:
+                        printf(" _______\n");
+                        printf("| @   @ |\n");
+                        printf("|   @   |\n");
+                        printf("|_@___@_|\n");
+                        break;
+                        case 6:
+                        printf(" _______\n");
+                        printf("| @   @ |\n");
+                        printf("| @   @ |\n");
+                        printf("|_@___@_|\n");
+                        break;
+                        }
+                        }
+                        
+                        /*Funciton: roll_data
+                        date created: 10/6/16
+                        programmer: Austin Craigie
+                        date modified: 10/6/16
+                        programmer: Austin Craigie
+                        description: will display the dice and the roll number after each roll*/
+
+                        void roll_data(int die1, int die2, int roll_count, int point)
+                        {
+                        printf("Roll %d \n", roll_count);
+                        display_dice(die1);
+                        display_dice(die2);
+                        if (roll_count == 1)
+                        {
+                        printf("first roll\n");
+                        }
+                        else
+                        {
+                        printf("Point roll: need %d\n", point);
+                        }
+                        system("pause");
+                        }
+                    </code>
+                 </pre>
+            </div>
+
+             <div id="Main.c" class="tabcontent">
+                 <pre id ="code" class="prettyprint">
+                    <code class = "language-c">
+                        /*Name: Austin Craigie
+                        Class: Cpts 121, fall 2016, Lab Section 05
+                        Programming Assignment: PA 4
+                        Date: 10/5/2016
+                        Description: This is the game, craps
+                        File: Main.c
+                        */
+
+                        #include "header.h"
+
+                        int main(void)
+                        {
+                        srand((unsigned int)time(NULL));
+                        double bank = 0.0, wager = 0.0, starting_bank = 0.0;
+                        int dice1 = 0, dice2 = 0, sum = 0, point = 0, first_roll_check = 0, win_lose = 0,
+                        num_rolls = 0, num_games = 0, cheat_check = 0;
+
+                        // pre game info
+
+                        print_game_rules();
+                        starting_bank = get_bank_balance();
+                        bank = starting_bank;
+                        do
+                        {
+                        print_game_rules();
+                        num_rolls = 0;
+                        do
+                        {
+                        wager = get_wager_amount(bank);
+                        } while (check_wager_amount(wager, bank) != 1);
+
+                        //first roll
+
+                        dice1 = roll_die();
+                        dice2 = roll_die();
+
+                        //cheat just for fun
+
+                        if (starting_bank == 24328.37) //if your wondering where the number came
+                        from, look at a phone :)
+                        {
+                        dice1 = 4;
+                        dice2 = 3;
+                        cheat_check = 1;
+                        }
+                        num_rolls += 1;
+                        sum = calculate_sum_dice(dice1, dice2);
+                        roll_data(dice1, dice2, num_rolls, point);
+                        first_roll_check = is_win_loss_or_point(sum);
+
+                        //point rolls
+
+                        if (first_roll_check == -1)
+                        {
+                        point = sum;
+                        do
+                        {
+                        dice1 = roll_die();
+                        dice2 = roll_die();
+                        num_rolls += 1;
+                        roll_data(dice1, dice2, num_rolls, point);
+                        sum = calculate_sum_dice(dice1, dice2);
+                        } while (is_point_loss_or_neither(sum, point) == -1);
+                        win_lose = is_point_loss_or_neither(sum, point);
+                        }
+                        else
+                        {
+                        win_lose = first_roll_check;
+                        }
+
+                        //after game info
+
+                        bank = adjust_bank_balance(bank, wager, win_lose);
+                        num_games += 1;
+                        chatter_messages(num_rolls, win_lose, starting_bank, bank, num_games);
+                        if (cheat_check == 1)
+                        {
+                        printf("CHEATER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+                        }
+                        } while (end_game(bank) == 1);
+                        return 0;
+                        }
+                    </code>
+                </pre>
+            </div>
+
+            <script>
+            function openFile(evt, fileName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(fileName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+	    </script>-->
+
+            
+    
+        </body>
+    </html>

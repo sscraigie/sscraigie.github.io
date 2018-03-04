@@ -1,0 +1,894 @@
+
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html lang="en-us">
+        <head>
+            <title>Austin Craigie - Tanks!</title>
+
+            <!--unity info header-->
+            <meta charset="utf-8">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <script src="games/unity/Tanks/Build/UnityLoader.js"></script>
+            <script>
+            var gameInstance = UnityLoader.instantiate("gameContainer", "games/unity/Tanks/Build/Tanks Build.json");
+            </script>
+                    
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header">
+                <p id="header"> Austin Craigie - Tanks!</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "30%" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+
+            <!--THE Main Body goes here-->
+            <h2>Tanks! - Unity Tutorial</h2>
+            <p style="text-align: left;"> Instructions:<br>
+            Who ever destories the other tank first wins the round. Win 5 rounds to win the game.<br><br>
+            <span style="color: blue"> Player 1:</span><br>
+            Move: WASD<br>
+            Shoot: Space<br><br>
+            <span style="color:red">Player 2:</span><br>
+            Move: Arrow Keys<br>
+            Shoot: Enter<br>
+           </p>
+            
+           
+            <!--Unity player goes here-->
+            <center style="padding-bottom: 2em"><div id="gameContainer" style="width: 960px; height: 480px; margin: auto"></div></center>
+          
+          <p>Here is the script running the game (written in C#)</p>
+
+          <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+            <div class="tab">
+            <button class="tablinks" onclick="openFile(event, 'GameManager.cs')" id="defaultOpen">GameManager.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'CameraControl.cs')">CameraControl.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'TankManager.cs')">TankManager.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'UIDirectionControl.cs')">UIDirectionControl.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'TankShooting.cs')">TankShooting.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'TankMovement.cs')">TankMovement.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'TankHealth.cs')">TankHealth.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'ShellExplosion.cs')">ShellExplosion.cs</button>
+            </div>
+
+            <div id="GameManager.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+                    using System.Collections;
+                    using UnityEngine.SceneManagement;
+                    using UnityEngine.UI;
+
+                    public class GameManager : MonoBehaviour
+                    {
+                        public int m_NumRoundsToWin = 5;        
+                        public float m_StartDelay = 3f;         
+                        public float m_EndDelay = 3f;           
+                        public CameraControl m_CameraControl;   
+                        public Text m_MessageText;              
+                        public GameObject m_TankPrefab;         
+                        public TankManager[] m_Tanks;           
+
+
+                        private int m_RoundNumber;              
+                        private WaitForSeconds m_StartWait;     
+                        private WaitForSeconds m_EndWait;       
+                        private TankManager m_RoundWinner;
+                        private TankManager m_GameWinner;       
+
+
+                        private void Start()
+                        {
+                            m_StartWait = new WaitForSeconds(m_StartDelay);
+                            m_EndWait = new WaitForSeconds(m_EndDelay);
+
+                            SpawnAllTanks();
+                            SetCameraTargets();
+
+                            StartCoroutine(GameLoop());
+                        }
+
+
+                        private void SpawnAllTanks()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                m_Tanks[i].m_Instance =
+                                    Instantiate(m_TankPrefab, m_Tanks[i].m_SpawnPoint.position, m_Tanks[i].m_SpawnPoint.rotation) as GameObject;
+                                m_Tanks[i].m_PlayerNumber = i + 1;
+                                m_Tanks[i].Setup();
+                            }
+                        }
+
+
+                        private void SetCameraTargets()
+                        {
+                            Transform[] targets = new Transform[m_Tanks.Length];
+
+                            for (int i = 0; i < targets.Length; i++)
+                            {
+                                targets[i] = m_Tanks[i].m_Instance.transform;
+                            }
+
+                            m_CameraControl.m_Targets = targets;
+                        }
+
+
+                        private IEnumerator GameLoop()
+                        {
+                            yield return StartCoroutine(RoundStarting());
+                            yield return StartCoroutine(RoundPlaying());
+                            yield return StartCoroutine(RoundEnding());
+
+                            if (m_GameWinner != null)
+                            {
+                                SceneManager.LoadScene (0);
+                            }
+                            else
+                            {
+                                StartCoroutine(GameLoop());
+                            }
+                    }
+
+
+                        private IEnumerator RoundStarting()
+                        {
+                            ResetAllTanks ();
+                            DisableTankControl ();
+
+                            m_CameraControl.SetStartPositionAndSize ();
+
+                            m_RoundNumber++;
+                            m_MessageText.text = "ROUND " + m_RoundNumber;
+                            yield return m_StartWait;
+
+                        }
+
+
+                        private IEnumerator RoundPlaying()
+                        {
+                            EnableTankControl ();
+
+                            m_MessageText.text = string.Empty;
+
+                            while (!OneTankLeft ()) 
+                            {
+                                yield return null;
+                            }
+                        }
+
+
+                        private IEnumerator RoundEnding()
+                        {
+                            DisableTankControl ();
+
+                            m_RoundWinner = null;
+
+                            m_RoundWinner = GetRoundWinner ();
+
+                            if (m_RoundWinner != null)
+                                m_RoundWinner.m_Wins++;
+
+                            m_GameWinner = GetGameWinner ();
+
+                            string message = EndMessage ();
+                            m_MessageText.text = message;
+
+                            yield return m_EndWait;
+                        }
+
+
+                        private bool OneTankLeft()
+                        {
+                            int numTanksLeft = 0;
+
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                if (m_Tanks[i].m_Instance.activeSelf)
+                                    numTanksLeft++;
+                            }
+
+                            return numTanksLeft <= 1;
+                        }
+
+
+                        private TankManager GetRoundWinner()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                if (m_Tanks[i].m_Instance.activeSelf)
+                                    return m_Tanks[i];
+                            }
+
+                            return null;
+                        }
+
+
+                        private TankManager GetGameWinner()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                if (m_Tanks[i].m_Wins == m_NumRoundsToWin)
+                                    return m_Tanks[i];
+                            }
+
+                            return null;
+                        }
+
+
+                        private string EndMessage()
+                        {
+                            string message = "DRAW!";
+
+                            if (m_RoundWinner != null)
+                                message = m_RoundWinner.m_ColoredPlayerText + " WINS THE ROUND!";
+
+                            message += "\n\n\n\n";
+
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                message += m_Tanks[i].m_ColoredPlayerText + ": " + m_Tanks[i].m_Wins + " WINS\n";
+                            }
+
+                            if (m_GameWinner != null)
+                                message = m_GameWinner.m_ColoredPlayerText + " WINS THE GAME!";
+
+                            return message;
+                        }
+
+
+                        private void ResetAllTanks()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                m_Tanks[i].Reset();
+                            }
+                        }
+
+
+                        private void EnableTankControl()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                m_Tanks[i].EnableControl();
+                            }
+                        }
+
+
+                        private void DisableTankControl()
+                        {
+                            for (int i = 0; i < m_Tanks.Length; i++)
+                            {
+                                m_Tanks[i].DisableControl();
+                            }
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="CameraControl.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+
+                    public class CameraControl : MonoBehaviour
+                    {
+                        public float m_DampTime = 0.2f;                 
+                        public float m_ScreenEdgeBuffer = 4f;           
+                        public float m_MinSize = 6.5f;                  
+                        [HideInInspector] public Transform[] m_Targets; 
+
+
+                        private Camera m_Camera;                        
+                        private float m_ZoomSpeed;                      
+                        private Vector3 m_MoveVelocity;                 
+                        private Vector3 m_DesiredPosition;              
+
+
+                        private void Awake()
+                        {
+                            m_Camera = GetComponentInChildren<Camera>();
+                        }
+
+
+                        private void FixedUpdate()
+                        {
+                            Move();
+                            Zoom();
+                        }
+
+
+                        private void Move()
+                        {
+                            FindAveragePosition();
+
+                            transform.position = Vector3.SmoothDamp(transform.position, m_DesiredPosition, ref m_MoveVelocity, m_DampTime);
+                        }
+
+
+                        private void FindAveragePosition()
+                        {
+                            Vector3 averagePos = new Vector3();
+                            int numTargets = 0;
+
+                            for (int i = 0; i < m_Targets.Length; i++)
+                            {
+                                if (!m_Targets[i].gameObject.activeSelf)
+                                    continue;
+
+                                averagePos += m_Targets[i].position;
+                                numTargets++;
+                            }
+
+                            if (numTargets > 0)
+                                averagePos /= numTargets;
+
+                            averagePos.y = transform.position.y;
+
+                            m_DesiredPosition = averagePos;
+                        }
+
+
+                        private void Zoom()
+                        {
+                            float requiredSize = FindRequiredSize();
+                            m_Camera.orthographicSize = Mathf.SmoothDamp(m_Camera.orthographicSize, requiredSize, ref m_ZoomSpeed, m_DampTime);
+                        }
+
+
+                        private float FindRequiredSize()
+                        {
+                            Vector3 desiredLocalPos = transform.InverseTransformPoint(m_DesiredPosition);
+
+                            float size = 0f;
+
+                            for (int i = 0; i < m_Targets.Length; i++)
+                            {
+                                if (!m_Targets[i].gameObject.activeSelf)
+                                    continue;
+
+                                Vector3 targetLocalPos = transform.InverseTransformPoint(m_Targets[i].position);
+
+                                Vector3 desiredPosToTarget = targetLocalPos - desiredLocalPos;
+
+                                size = Mathf.Max (size, Mathf.Abs (desiredPosToTarget.y));
+
+                                size = Mathf.Max (size, Mathf.Abs (desiredPosToTarget.x) / m_Camera.aspect);
+                            }
+                            
+                            size += m_ScreenEdgeBuffer;
+
+                            size = Mathf.Max(size, m_MinSize);
+
+                            return size;
+                        }
+
+
+                        public void SetStartPositionAndSize()
+                        {
+                            FindAveragePosition();
+
+                            transform.position = m_DesiredPosition;
+
+                            m_Camera.orthographicSize = FindRequiredSize();
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="TankManager.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using System;
+                    using UnityEngine;
+
+                    [Serializable]
+                    public class TankManager
+                    {
+                        public Color m_PlayerColor;            
+                        public Transform m_SpawnPoint;         
+                        [HideInInspector] public int m_PlayerNumber;             
+                        [HideInInspector] public string m_ColoredPlayerText;
+                        [HideInInspector] public GameObject m_Instance;          
+                        [HideInInspector] public int m_Wins;                     
+
+
+                        private TankMovement m_Movement;       
+                        private TankShooting m_Shooting;
+                        private GameObject m_CanvasGameObject;
+
+
+                        public void Setup()
+                        {
+                            m_Movement = m_Instance.GetComponent<TankMovement>();
+                            m_Shooting = m_Instance.GetComponent<TankShooting>();
+                            m_CanvasGameObject = m_Instance.GetComponentInChildren<Canvas>().gameObject;
+
+                            m_Movement.m_PlayerNumber = m_PlayerNumber;
+                            m_Shooting.m_PlayerNumber = m_PlayerNumber;
+
+                            m_ColoredPlayerText = "<color=#" + ColorUtility.ToHtmlStringRGB(m_PlayerColor) + ">PLAYER " + m_PlayerNumber + "</color>";
+
+                            MeshRenderer[] renderers = m_Instance.GetComponentsInChildren<MeshRenderer>();
+
+                            for (int i = 0; i < renderers.Length; i++)
+                            {
+                                renderers[i].material.color = m_PlayerColor;
+                            }
+                        }
+
+
+                        public void DisableControl()
+                        {
+                            m_Movement.enabled = false;
+                            m_Shooting.enabled = false;
+
+                            m_CanvasGameObject.SetActive(false);
+                        }
+
+
+                        public void EnableControl()
+                        {
+                            m_Movement.enabled = true;
+                            m_Shooting.enabled = true;
+
+                            m_CanvasGameObject.SetActive(true);
+                        }
+
+
+                        public void Reset()
+                        {
+                            m_Instance.transform.position = m_SpawnPoint.position;
+                            m_Instance.transform.rotation = m_SpawnPoint.rotation;
+
+                            m_Instance.SetActive(false);
+                            m_Instance.SetActive(true);
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="UIDirectionControl.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+
+                    public class UIDirectionControl : MonoBehaviour
+                    {
+                        public bool m_UseRelativeRotation = true;  
+
+
+                        private Quaternion m_RelativeRotation;     
+
+
+                        private void Start()
+                        {
+                            m_RelativeRotation = transform.parent.localRotation;
+                        }
+
+
+                        private void Update()
+                        {
+                            if (m_UseRelativeRotation)
+                                transform.rotation = m_RelativeRotation;
+                        }
+                    }
+
+                </code>
+            </pre>
+            </div>
+            
+            <div id="TankShooting.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+                    using UnityEngine.UI;
+
+                    public class TankShooting : MonoBehaviour
+                    {
+                        public int m_PlayerNumber = 1;       
+                        public Rigidbody m_Shell;            
+                        public Transform m_FireTransform;    
+                        public Slider m_AimSlider;           
+                        public AudioSource m_ShootingAudio;  
+                        public AudioClip m_ChargingClip;     
+                        public AudioClip m_FireClip;         
+                        public float m_MinLaunchForce = 15f; 
+                        public float m_MaxLaunchForce = 30f; 
+                        public float m_MaxChargeTime = 0.75f;
+
+                        
+                        private string m_FireButton;         
+                        private float m_CurrentLaunchForce;  
+                        private float m_ChargeSpeed;         
+                        private bool m_Fired;                
+
+
+                        private void OnEnable()
+                        {
+                            m_CurrentLaunchForce = m_MinLaunchForce;
+                            m_AimSlider.value = m_MinLaunchForce;
+                        }
+
+
+                        private void Start()
+                        {
+                            m_FireButton = "Fire" + m_PlayerNumber;
+
+                            m_ChargeSpeed = (m_MaxLaunchForce - m_MinLaunchForce) / m_MaxChargeTime;
+                        }
+
+                        private void Update()
+                        {
+                            // Track the current state of the fire button and make decisions based on the current launch force.
+                            m_AimSlider.value = m_MinLaunchForce;
+
+                            if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired) 
+                            {
+                                //at max charge, not yet fired
+                                m_CurrentLaunchForce = m_MaxLaunchForce;
+                                Fire ();
+                            } 
+                            else if (Input.GetButtonDown (m_FireButton)) 
+                            {
+                                m_Fired = false;
+                                m_CurrentLaunchForce = m_MinLaunchForce;
+
+                                m_ShootingAudio.clip = m_ChargingClip;
+                                m_ShootingAudio.Play ();
+
+                            } 
+                            else if (Input.GetButton (m_FireButton) && !m_Fired) 
+                            {
+                                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+
+                                m_AimSlider.value = m_CurrentLaunchForce;
+                            }
+                            else if (Input.GetButtonUp (m_FireButton) && !m_Fired) 
+                            {
+                                Fire ();
+                            }
+
+                        }
+
+
+                        private void Fire()
+                        {
+                            m_Fired = true;
+
+                            Rigidbody shellInstance = Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+
+                            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
+
+                            m_ShootingAudio.clip = m_FireClip;
+                            m_ShootingAudio.Play ();
+
+                            m_CurrentLaunchForce = m_MinLaunchForce;
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="TankMovement.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+
+                    public class TankMovement : MonoBehaviour
+                    {
+                        public int m_PlayerNumber = 1;         
+                        public float m_Speed = 12f;            
+                        public float m_TurnSpeed = 180f;       
+                        public AudioSource m_MovementAudio;    
+                        public AudioClip m_EngineIdling;       
+                        public AudioClip m_EngineDriving;      
+                        public float m_PitchRange = 0.2f;
+
+
+                        private string m_MovementAxisName;     
+                        private string m_TurnAxisName;         
+                        private Rigidbody m_Rigidbody;         
+                        private float m_MovementInputValue;    
+                        private float m_TurnInputValue;        
+                        private float m_OriginalPitch;         
+
+
+                        private void Awake()
+                        {
+                            m_Rigidbody = GetComponent<Rigidbody>();
+                        }
+
+
+                        private void OnEnable ()
+                        {
+                            m_Rigidbody.isKinematic = false;
+                            m_MovementInputValue = 0f;
+                            m_TurnInputValue = 0f;
+                        }
+
+
+                        private void OnDisable ()
+                        {
+                            m_Rigidbody.isKinematic = true;
+                        }
+
+
+                        private void Start()
+                        {
+                            m_MovementAxisName = "Vertical" + m_PlayerNumber;
+                            m_TurnAxisName = "Horizontal" + m_PlayerNumber;
+
+                            m_OriginalPitch = m_MovementAudio.pitch;
+                        }
+                        
+
+                        private void Update()
+                        {
+                            // Store the player's input and make sure the audio for the engine is playing.
+                            m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
+                            m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
+                            EngineAudio ();
+                        }
+
+
+                        private void EngineAudio()
+                        {
+                            // Play the correct audio clip based on whether or not the tank is moving and what audio is currently playing.
+
+                            if (Mathf.Abs (m_MovementInputValue) < 0.1f && Mathf.Abs (m_TurnInputValue) < 0.1f) {
+                                if (m_MovementAudio.clip == m_EngineDriving) {
+                                    m_MovementAudio.clip = m_EngineIdling;
+                                    m_MovementAudio.pitch = Random.Range (m_OriginalPitch - m_PitchRange, m_OriginalPitch + m_PitchRange);
+                                    m_MovementAudio.Play ();
+                                }
+
+                            }
+                            else
+                            {
+                                if (m_MovementAudio.clip == m_EngineIdling) 
+                                {
+                                    m_MovementAudio.clip = m_EngineDriving;
+                                    m_MovementAudio.pitch = Random.Range (m_OriginalPitch - m_PitchRange, m_OriginalPitch + m_PitchRange);
+                                    m_MovementAudio.Play ();
+                                }
+                            }
+                        }
+
+
+                        private void FixedUpdate()
+                        {
+                            // Move and turn the tank.
+                            Move();
+                            Turn ();
+                        }
+
+
+                        private void Move()
+                        {
+                            // Adjust the position of the tank based on the player's input.
+                            Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
+                            m_Rigidbody.MovePosition (m_Rigidbody.position + movement);
+                        }
+
+
+                        private void Turn()
+                        {
+                            // Adjust the rotation of the tank based on the player's input.
+                            float turn = m_TurnInputValue * m_TurnSpeed * Time.deltaTime;
+                            Quaternion turnRotation = Quaternion.Euler (0f, turn, 0f);
+                            m_Rigidbody.MoveRotation (m_Rigidbody.rotation * turnRotation);
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="TankHealth.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+                    using UnityEngine.UI;
+
+                    public class TankHealth : MonoBehaviour
+                    {
+                        public float m_StartingHealth = 100f;          
+                        public Slider m_Slider;                        
+                        public Image m_FillImage;                      
+                        public Color m_FullHealthColor = Color.green;  
+                        public Color m_ZeroHealthColor = Color.red;    
+                        public GameObject m_ExplosionPrefab;
+                        
+                        
+                        private AudioSource m_ExplosionAudio;          
+                        private ParticleSystem m_ExplosionParticles;   
+                        private float m_CurrentHealth;  
+                        private bool m_Dead;            
+
+
+                        private void Awake()
+                        {
+                            m_ExplosionParticles = Instantiate(m_ExplosionPrefab).GetComponent<ParticleSystem>();
+                            m_ExplosionAudio = m_ExplosionParticles.GetComponent<AudioSource>();
+
+                            m_ExplosionParticles.gameObject.SetActive(false);
+                        }
+
+
+                        private void OnEnable()
+                        {
+                            m_CurrentHealth = m_StartingHealth;
+                            m_Dead = false;
+
+                            SetHealthUI();
+                        }
+                        
+
+                        public void TakeDamage(float amount)
+                        {
+                            // Adjust the tank's current health, update the UI based on the new health and check whether or not the tank is dead.
+                            m_CurrentHealth -= amount;
+
+                            SetHealthUI ();
+
+                            if (m_CurrentHealth < 0f && !m_Dead) {
+                                OnDeath ();
+                                }
+                        }
+
+
+                        private void SetHealthUI()
+                        {
+                            // Adjust the value and colour of the slider.
+                            m_Slider.value = m_CurrentHealth;
+                            m_FillImage.color = Color.Lerp (m_ZeroHealthColor, m_FullHealthColor, m_CurrentHealth / m_StartingHealth);
+                        }
+
+
+                        private void OnDeath()
+                        {
+                            // Play the effects for the death of the tank and deactivate it.
+                            m_Dead = true;
+
+                            m_ExplosionParticles.transform.position = transform.position;
+
+                            m_ExplosionParticles.gameObject.SetActive (true);
+
+                            m_ExplosionParticles.Play ();
+
+                            m_ExplosionAudio.Play ();
+
+                            gameObject.SetActive (false);
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <div id="ShellExplosion.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint">
+                <code class = "language-cs">
+                    using UnityEngine;
+
+                    public class ShellExplosion : MonoBehaviour
+                    {
+                        public LayerMask m_TankMask;
+                        public ParticleSystem m_ExplosionParticles;       
+                        public AudioSource m_ExplosionAudio;              
+                        public float m_MaxDamage = 100f;                  
+                        public float m_ExplosionForce = 1000f;            
+                        public float m_MaxLifeTime = 2f;                  
+                        public float m_ExplosionRadius = 5f;              
+
+
+                        private void Start()
+                        {
+                            Destroy(gameObject, m_MaxLifeTime);
+                        }
+
+
+                        private void OnTriggerEnter(Collider other)
+                        {
+                            // Find all the tanks in an area around the shell and damage them.
+                            Collider[] colliders = Physics.OverlapSphere (transform.position, m_ExplosionRadius, m_TankMask);
+
+                            for(int i = 0; i < colliders.Length; i++)
+                            {
+                                Rigidbody targetRigidbody = colliders [i].GetComponent<Rigidbody> ();
+
+                                if (!targetRigidbody)
+                                    continue;
+
+                                targetRigidbody.AddExplosionForce (m_ExplosionForce, transform.position, m_ExplosionRadius);
+
+                                TankHealth targetHealth = targetRigidbody.GetComponent<TankHealth> ();
+
+                                if (!targetHealth)
+                                    continue;
+
+                                float damage = CalculateDamage (targetRigidbody.position);
+
+                                targetHealth.TakeDamage (damage);
+                            }
+
+                            m_ExplosionParticles.transform.parent = null;
+
+                            m_ExplosionParticles.Play ();
+
+                            m_ExplosionAudio.Play ();
+
+                            Destroy (m_ExplosionParticles.gameObject, m_ExplosionParticles.duration);
+
+                            Destroy (gameObject);
+                        }
+
+
+                        private float CalculateDamage(Vector3 targetPosition)
+                        {
+                            // Calculate the amount of damage a target should take based on it's position.
+                            Vector3 explosionToTarget = targetPosition - transform.position;
+
+                            float explostionDistance = explosionToTarget.magnitude;
+
+                            float relativeDistance = (m_ExplosionRadius - explostionDistance) / m_ExplosionRadius;
+
+                            float damage = relativeDistance * m_MaxDamage;
+
+                            damage = Mathf.Max (0f, damage);
+
+                            return damage;
+
+                        }
+                    }
+                </code>
+            </pre>
+            </div>
+            
+            <script>
+            function openFile(evt, fileName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(fileName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+            </script>
+    
+        </body>
+    </html>

@@ -1,0 +1,359 @@
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html>
+        <head>
+            <title>Austin Craigie - ML</title>
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header">
+                <p id="header"> Austin Craigie - ML</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "auto" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+            <!--the main content goes here-->
+            <h2>Meta Language</h2>
+            <center><img class = "align-right" id="orange" width = "25%" height="auto" src="pics/ML.jpg"/></center>
+
+            <p style="padding-left: 3%">Meta Language is the first of three programing languages that was taught in CPT_S 355. It was a class
+                that taught student how to learn new programming languages. Meta Language is a general purpose function programming language. It was very different then anything
+                I had programmed in before. Below was the first assignment in ML for the class.<br><br><br><br><br><br></p>
+
+
+                <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+            <div class="tab">
+            <button class="tablinks" onclick="openFile(event, 'Example.sml')" id="defaultOpen">Example.sml</button>
+            <button class="tablinks" onclick="openFile(event, 'Tests.sml')">Test.sml</button>
+            </div>
+
+            <div id="Example.sml" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-c">
+                    (*
+                    *
+                    * Programmer: Austin Craigie
+                    * Date: 1/31/18 
+                    * Assignment: ML Assignment 1
+                    * Class: Cpt_s 355
+                    *)
+                    
+                    (*1. Inlist search*)
+                    fun inList(x, L) = 
+                        if null L = true then false else
+                        if hd(L) = x then true else
+                        inList(x, tl(L))
+                    
+                    
+                    (*2. Remove Duplicates*)
+                    fun removeDuplicates L =
+                        let
+                             fun removeDup (x, L2) = 
+                                if x = hd(L2) then tl(L2) 
+                                else removeDup(x, tl((L2@[hd(L2)])))
+                    
+                            fun noDuplicates(L3) = 
+                                if null L3 = true then true else
+                                if inList(hd(L3), tl(L3)) = true then false else noDuplicates (tl(L3))
+                            
+                    
+                        in
+                            if null L = true then [] else
+                            if inList(hd(L), tl(L)) =  true then (*there is at least 1 duplicate value in the list*)
+                                let
+                                    val Ltemp = removeDup(hd(L), tl(L)) 
+                                in
+                                    if inList(hd(L), Ltemp) = true then (*there is still at least 1 duplicate*)
+                                        removeDuplicates((hd(L))::Ltemp)
+                                    else (*there is no duplicate - move to back of list*)
+                                        removeDuplicates((Ltemp@[(hd(L))]))
+                                end
+                            else
+                                if noDuplicates(L) = true then L else removeDuplicates((tl(L)@[(hd(L))]))
+                        end
+                    
+                    
+                    (*3. list Intersect*)
+                    fun listIntersect (L, L2) = 
+                        let
+                            fun seperateCommon (L,L2) = 
+                                if null L = true then [] else
+                                if null L2 = true then [] else
+                                if inList(hd(L), L2) = false then seperateCommon(tl(L), L2) else
+                                seperateCommon(tl(L), L2) @ [hd(L)]
+                        in
+                            removeDuplicates (seperateCommon (L,L2))
+                        end
+                    
+                    (*4. Range*)
+                    fun range min step max = 
+                        if (step > 0) andalso (min > max) then [] else
+                        if (step < 0) andalso (min < max) then [] else
+                        if step = 0 then [] else
+                        if max - step >= min andalso (step < 0) then [min] else
+                        if max - step <= min andalso (step > 0) then [min] else
+                        range min step (max - step) @ [max - step] 
+                    
+                    
+                    
+                    (*5. numberToSum*)
+                    fun numbersToSum sum L = 
+                        if (null L = true) orelse (sum <= 0) then [] else
+                        if sum <= hd(L)  then [] else
+                        [hd(L)] @ (numbersToSum (sum - hd(L)) (tl(L))) 
+                        
+                    
+                    (*6. replace*)
+                    fun replace n v L = 
+                        if n = 0 then ([v] @ tl(L)) else
+                        [hd(L)] @ (replace (n - 1) v (tl(L)))
+                    
+                    
+                    (*7. groupNright*)
+                    fun groupNright n L = 
+                        let 
+                            fun reset n L = 
+                                if n = 0 then L else
+                                reset (n - 1) (tl(L))
+                    
+                            fun check n L = 
+                                if n = 0 then true else
+                                if null L = true then false else
+                                check (n-1) (tl(L))
+                    
+                            fun sublist n L = 
+                                if null L = true then [] else
+                                if n = 0 then [] else
+                                (hd(L))::sublist (n-1) (tl(L)) 
+                    
+                            fun flip L = 
+                                if null L = true then [] else
+                                flip (tl(L)) @ [hd(L)]
+                                
+                            fun seperate n L = 
+                                if (check n L) = true then [(sublist n L)] @ (seperate n (reset n L)) 
+                                else [L]
+                            
+                            val List = flip (seperate n L)
+                        in  
+                            if null (hd(List)) = true then flip(tl(List)) else
+                            flip(List)
+                    
+                        end
+                    
+                    (*8. groupNleft*)
+                    fun groupNleft n L = 
+                        let 
+                            fun flip L = 
+                                if null L = true then [] else
+                                flip (tl(L)) @ [hd(L)]
+                    
+                            fun flipSub L =
+                             if null L = true then [] else
+                            [flip (hd(L))] @ flipSub (tl(L))
+                        in 
+                           flipSub (flip (groupNright n (flip(L))))
+                        end
+                  </code></pre>
+            </div>
+
+            <div id="Tests.sml" class="tabcontent">
+                    <pre id ="code" class="prettyprint"><code class = "language-c">
+                            fun inListTest () = 
+                                let
+                                    val test1 = (inList(8, [7]) = false)
+                                    val test2 = (inList(22, [1,3,4,5,2]) = false)
+                                    val test3 = (inList(5, [2,5,2,6,7]) = true)
+                                    val test4 = (inList(1, [1,2,3,4,5]) = true)
+                                    val test5 = (inList(6, []) = false)
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           inList Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            
+                            fun removeDuplicatesTest () = 
+                                let
+                                    fun check (L) = (*This is just a check to see if there are duplicates*)
+                                        if null L = true then true else
+                                        if (inList(hd(L), tl(L))) = true then false
+                                        else check (tl(L))
+                            
+                                    val test1 = ((check (removeDuplicates [1,2,3,4,5,6,7])) = true)
+                                    val test2 = ((check (removeDuplicates ["a", "B", "C", "D"])) = true)
+                                    val test3 = ((check (removeDuplicates [1,1,1,1,1])) = true)
+                                    val test4 = ((check (removeDuplicates [1,2,3,4,5,5,3])) = true)
+                                    val test5 = ((check (removeDuplicates [22,34,53,2,1,22])) = true)
+                                in 
+                                    print ("\n___________________________________\n"^
+                                            "      removeDuplicate Test:\n" ^
+                                            "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                            "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                            "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                            "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                            "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            fun listIntersectTest  () = 
+                                let
+                                    fun check (L, L2) = (*This check to make sure it passes*)
+                                        if (null L = true) andalso (null L2 = true)  then true else
+                                        if  null L = true then true else
+                                        if inList(hd(L), L2) = false then false else
+                                        if (null L = true) then true else
+                                        check(tl(L), L2) 
+                            
+                                    val test1 = (check ((listIntersect ([1,2,3,1,4], [4,3,21,1]), [1,3,4])) = true)
+                                    val test2 = (check ((listIntersect ([43,12,1,2], [1,1,2]), [1,2])) = true)
+                                    val test3 = (check ((listIntersect ([1,2,3,4,5], [1,4,6,3,2,8])),[1,2,3,4]) = true)
+                                    val test4 = (check ((listIntersect ([], [1,2,3,1]), [])) = true)
+                                    val test5 = (check ((listIntersect (["a", "B", "c"], [ "D", "A", "a"]), ["a"])) = true)
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           listIntersect Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            
+                            fun rangeTest () = 
+                                let
+                                    val test1 = ((range 1 3 10) = [1,4,7] )
+                                    val test2 = ((range 4 2 1 ) = [])
+                                    val test3 = ((range 10 ~1 3) = [10, 9, 8, 7, 6, 5, 4])
+                                    val test4 = ((range 3 0 10) = [])
+                                    val test5 = ((range 2 ~1 9) = [])
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           range Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            fun  numbersToSumTest () = 
+                                let
+                                    val test1 = ((numbersToSum 100 [10, 20, 30, 40]) = [10, 20, 30])
+                                    val test2 = ((numbersToSum 0 [1, 3, 4, 5, 6] ) = [])
+                                    val test3 = ((numbersToSum 15 [1,2,3,4]) = [1,2,3,4])
+                                    val test4 = ((numbersToSum 20 []) = [])
+                                    val test5 = ((numbersToSum  10 [1,2,1,2,1,2,1,2,1,2,1,2]) = [1,2,1,2,1,2])
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           numbersToSum Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            fun replaceTest () = 
+                                let
+                                    val test1 = ((replace 0 ~1 [1,2,3,4,5,6,7]) = [~1,2,3,4,5,6,7])
+                                    val test2 = ((replace 1 ~1 [1,2,3,4,5,6,7]) = [1,~1,3,4,5,6,7])
+                                    val test3 = ((replace 2 ~1 [1,2,3,4,5,6,7]) = [1,2,~1,4,5,6,7])
+                                    val test4 = ((replace 3 ~1 [1,2,3,4,5,6,7]) = [1,2,3,~1,5,6,7])
+                                    val test5 = ((replace 4 ~1 [1,2,3,4,5,6,7]) = [1,2,3,4,~1,6,7])
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           replaceTest Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            fun groupNleftTest () = 
+                                let
+                                    val test1 = ((groupNleft 1 [1,2,3,4,5,6,7,8]) = [[1],[2],[3],[4],[5],[6],[7],[8]])
+                                    val test2 = ((groupNleft 2 [1,2,3,4,5,6,7,8]) = [[1,2], [3,4], [5,6], [7,8]])
+                                    val test3 = ((groupNleft 3 [1,2,3,4,5,6,7,8]) = [[1,2], [3,4,5], [6,7, 8]])
+                                    val test4 = ((groupNleft 4 [1,2,3,4,5,6,7,8]) = [[1,2,3,4], [5,6,7,8]])
+                                    val test5 = ((groupNleft 5 [1,2,3,4,5,6,7,8]) = [[1,2,3],[4,5,6,7,8]])
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           groupNleft Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                            
+                            fun groupNrightTest () = 
+                                let
+                                    val test1 = ((groupNright 1 [1,2,3,4,5,6,7,8]) = [[1],[2],[3],[4],[5],[6],[7],[8]])
+                                    val test2 = ((groupNright 2 [1,2,3,4,5,6,7,8]) = [[1,2], [3,4], [5,6], [7,8]])
+                                    val test3 = ((groupNright 3 [1,2,3,4,5,6,7,8]) = [[1,2,3], [4,5,6], [7,8]])
+                                    val test4 = ((groupNright 4 [1,2,3,4,5,6,7,8]) = [[1,2,3,4], [5,6,7,8]])
+                                    val test5 = ((groupNright 5 [1,2,3,4,5,6,7,8]) = [[1,2,3,4,5],[6,7,8]])
+                                in 
+                                print ("\n___________________________________\n"^
+                                        "           groupNright Test:\n" ^
+                                        "Test 1: " ^ Bool.toString(test1) ^ "\n" ^
+                                        "Test 2: " ^ Bool.toString(test2) ^ "\n" ^
+                                        "Test 3: " ^ Bool.toString(test3) ^ "\n" ^
+                                        "Test 4: " ^ Bool.toString(test4) ^ "\n" ^
+                                        "Test 5: " ^ Bool.toString(test5) ^ "\n")
+                                end
+                                
+                       
+                          </code></pre>
+                    </div>
+                    <script>
+                            function openFile(evt, fileName) {
+                                var i, tabcontent, tablinks;
+                                tabcontent = document.getElementsByClassName("tabcontent");
+                                for (i = 0; i < tabcontent.length; i++) {
+                                    tabcontent[i].style.display = "none";
+                                }
+                                tablinks = document.getElementsByClassName("tablinks");
+                                for (i = 0; i < tablinks.length; i++) {
+                                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                                }
+                                document.getElementById(fileName).style.display = "block";
+                                evt.currentTarget.className += " active";
+                            }
+                
+                            // Get the element with id="defaultOpen" and click on it
+                            document.getElementById("defaultOpen").click();
+                        </script>
+        
+
+    
+        </body>
+    </html>
+        

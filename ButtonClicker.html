@@ -1,0 +1,430 @@
+
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html lang="en-us">
+        <head>
+            <title>Austin Craigie - Button Clicker</title>
+
+            <!--unity info header-->
+            <meta charset="utf-8">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <script src="games/unity/ButtonClicker/Build/UnityLoader.js"></script>
+            <script>
+            var gameInstance = UnityLoader.instantiate("gameContainer", "games/unity/ButtonClicker/Build/temp.json");
+            </script>
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header">
+                <p id="header"> Austin Craigie - Button Clicker</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "30%" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+
+            <!--THE Main Body goes here-->
+            <h2>Button Clicker - UI Practice</h2>
+            <p>This is is simple game that I used to practice with UI (user interface) and buttons, hope you enjoy!!</p>
+            
+            <!--CHEAT: press c to set B-Coins to 1000000-->
+
+            <center style="padding-bottom: 2em"><div id="gameContainer" style="width: 960px; height: 400px; margin: auto"></div></center>
+          
+          <p>Here is the script running the game (written in C#)</p>
+
+          <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+            <div class="tab">
+            <button class="tablinks" onclick="openFile(event, 'GameController.cs')" id="defaultOpen">GameController.cs</button>
+            </div>
+
+            <div id="GameController.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine.UI;
+                using UnityEngine;
+
+                public class GameController : MonoBehaviour {
+
+                    //Nav
+                    public enum Menus {game, instructions, acheivements, store, setting, end, theButton, loose};
+                    public Menus curMenue = Menus.game;
+                    public GameObject gameScreen, instructionsScreen, acheivementsScreen, storeScreen, settingScreen, 
+                    endButton, nav, info, endScreen, theButton, looseScreen;
+                    public GameObject winAch, looseAch, firstClickAch, firstClockUpAch, firstClickUpAch, destroyerAch;
+                    private bool[] acheivement = {false, false, false, false, false, false};
+
+                    //Game
+                    public Text title, bCoins;
+                    int clickInt = 1, clockInt = 0, bCoinsInt, boxClicks = 0;
+                    bool endCheck;
+                    //store
+                    public Text dClickC, dClockC, dClickX, dClockX;
+                    int clickC = 100, clockC = 125, clickX = 0, clockX = 0;
+
+                    //audio
+                    public AudioSource theBoxAudio, achevementAudio, backgroundMusic;
+                    public Toggle music, sound;
+
+
+                    // Use this for initialization
+                    void Start (){
+                        InvokeRepeating ("timeAdd", 1.0f, 1.0f);
+                        InvokeRepeating ("loose", 60.0f, 60.0f);
+                    }
+
+                    // Update is called once per frame
+                    void Update () {
+
+                        if (music.isOn == true)
+                        {
+                            if(backgroundMusic.isPlaying == false)
+                                backgroundMusic.Play();
+                        }
+                        else
+                            backgroundMusic.Pause();
+                        
+                        if(Input.GetKeyDown(KeyCode.C))
+                            {
+                            bCoinsInt = 1000000;
+                            }
+
+                        switch (curMenue) {
+
+                        case Menus.game:
+                            hideAcheivemnts ();
+                            bCoins.text = "B-Coins: " + bCoinsInt;
+                            title.text = "Box Clicker";
+                            gameScreen.SetActive (true);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            endButton.SetActive (false);
+                            info.SetActive (true);
+                            nav.SetActive (true);
+                            break;
+
+                        case Menus.instructions:
+                            hideAcheivemnts ();
+                            bCoins.text = "";
+                            title.text = "Box Clicker - Instructions";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (true);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            break;
+                        case Menus.acheivements:
+                            bCoins.text = "";
+                            title.text = "Box Clicker - Acheivements";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (true);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            showAcheivements ();
+                            break;
+                        case Menus.store:
+                            hideAcheivemnts ();
+                            bCoins.text = "B-Coins: " + bCoinsInt;
+                            dClickC.text = "Cost: " + clickC;
+                            dClickX.text = "bought: " + clickX;
+                            dClockC.text = "Cost: " + clockC;
+                            dClockX.text = "bought: " + clockX;
+                            bCoins.text = "B-Coins: " + bCoinsInt;
+                            title.text = "Box Clicker - Store";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (true);
+                            settingScreen.SetActive (false);
+                            break;
+                        case Menus.setting:
+                            hideAcheivemnts ();
+                            bCoins.text = "";
+                            title.text = "Box Clicker - Settings";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (true);
+                            break;
+
+                        case Menus.end:
+                            hideAcheivemnts ();
+                            bCoins.text = "";
+                            title.text = "YOU WIN";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            endScreen.SetActive (true);		
+                            bCoins.text = " ";
+                            nav.SetActive (false);
+                            break;
+                        case Menus.theButton:
+                            hideAcheivemnts ();
+                            bCoins.text = "";
+                            title.text = "THE BUTTON!!!!!";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            endScreen.SetActive (false);		
+                            bCoins.text = " ";
+                            nav.SetActive (false);
+                            theButton.SetActive (true);
+                            break;
+                        case Menus.loose:
+                            hideAcheivemnts ();
+                            bCoins.text = "";
+                            title.text = "YOU LOOSE";
+                            gameScreen.SetActive (false);
+                            instructionsScreen.SetActive (false);
+                            acheivementsScreen.SetActive (false);
+                            storeScreen.SetActive (false);
+                            settingScreen.SetActive (false);
+                            endScreen.SetActive (true);		
+                            bCoins.text = " ";
+                            nav.SetActive (false);
+                            looseScreen.SetActive (true);
+                            break;
+                            
+                        }
+                    }
+
+                    public void Ongame()
+                    {
+                        curMenue = Menus.game;
+                    }
+                    public void Oninstructions()
+                    {
+                        curMenue = Menus.instructions;
+                    }
+                    public void Onacheivements()
+                    {
+                        curMenue = Menus.acheivements;
+                    }
+                    public void Onstore()
+                    {
+                        curMenue = Menus.store;
+                    }
+                    public void Onsettings()
+                    {
+                        curMenue = Menus.setting;
+                    }
+
+                    public void OnBox()
+                    {
+                        if (acheivement [2] == false) {
+                            acheivement [2] = true;
+                            if (sound.isOn == true)
+                                achevementAudio.Play();
+                        }
+
+                        if (sound.isOn == true)
+                            theBoxAudio.Play();
+                        bCoinsInt = bCoinsInt + clickInt;
+                        bCoins.text = "B-Coins: " + bCoinsInt;
+                        boxClicks = boxClicks + 1;
+                    }
+
+                    //store code
+                    public void buyClick()
+                    {
+                        int priceIncrease = 100;
+                        if (bCoinsInt >= clickC) {
+                            if (acheivement [4] == false) {
+                                acheivement [4] = true;
+                                if (sound.isOn == true)
+                                    achevementAudio.Play();
+                            }
+                            bCoinsInt = bCoinsInt - clickC;
+                            clickC = clickC + priceIncrease;
+                            dClickC.text = "Cost: " + clickC;
+                            clickInt++;
+                            clickX++;
+                            dClickX.text = "bought: " + clickX;
+                        }
+                    }
+
+                    public void buyclock()
+                    {
+                        int priceIncrease = 125;
+                        if (bCoinsInt >= clockC) {
+                            if (acheivement [3] == false) {
+                                acheivement [3] = true;
+                                if (sound.isOn == true)
+                                    achevementAudio.Play();
+                            }
+                            bCoinsInt = bCoinsInt - clockC;
+                            clockC = clockC + priceIncrease;
+                            dClockC.text = "Cost: " + clockC;
+                            clockInt++;
+                            clockX++;
+                            dClockX.text = "bought: " + clockX;
+                        }
+                    }
+
+
+
+                    public void End()
+                    {
+                        if (bCoinsInt >= 1000000) {
+                            if (acheivement [5] == false) {
+                                acheivement [5] = true;
+                                if (sound.isOn == true)
+                                    achevementAudio.Play();
+                            }
+                            curMenue = Menus.theButton;
+                            bCoinsInt = 0;
+                            endCheck = true;
+                        }
+                    }
+
+                    public void theButtonFunc()
+                    {
+                        if (acheivement [0] == false) {
+                            acheivement [0] = true;
+                            if (sound.isOn == true)
+                                achevementAudio.Play();
+                        }
+
+                        curMenue = Menus.end;
+                        theButton.SetActive (false);
+                    }
+
+                    public void restart()
+                    {
+                        curMenue = Menus.game;
+                        endScreen.SetActive (false);
+                        looseScreen.SetActive (false);
+                        nav.SetActive (true);
+                        clickC = 100;
+                        clockC = 125;
+                        clickX = 0;
+                        clockX = 0;
+                        clickInt = 1;
+                        clockInt = 0;
+                        bCoinsInt = 0;
+                        endCheck = false;
+                        nav.SetActive (true);
+
+                    }
+
+                    public void timeAdd()
+                    {
+                        if (!endCheck) {
+                            bCoinsInt = bCoinsInt + clockInt;
+                        }
+                    }
+
+                    public void loose()
+                    {
+                        if (acheivement [1] == false) {
+                            acheivement [1] = true;
+                            if (sound.isOn == true)
+                                achevementAudio.Play();
+                        }
+                        
+                        if (boxClicks == 0) {
+                            endCheck = true;
+                            curMenue = Menus.loose;
+                        } else {
+                            boxClicks = 0;
+                        }
+                            
+                    }
+
+                    private void showAcheivements()
+                    {
+                        if (acheivement [0] == true)
+                            winAch.SetActive (true);
+                        else
+                            winAch.SetActive (false);
+
+                        if (acheivement [1] == true)
+                            looseAch.SetActive (true);
+                        else
+                            looseAch.SetActive (false);
+
+                        if (acheivement [2] == true)
+                            firstClickAch.SetActive (true);
+                        else
+                            firstClickAch.SetActive (false);
+
+                        if (acheivement [3] == true)
+                            firstClockUpAch.SetActive (true);
+                        else
+                            firstClockUpAch.SetActive (false);
+
+                        if (acheivement [4] == true)
+                            firstClickUpAch.SetActive (true);
+                        else
+                            firstClickUpAch.SetActive (false);
+
+                        if (acheivement [5] == true)
+                            destroyerAch.SetActive (true);
+                        else
+                            destroyerAch.SetActive (false);
+                    }
+
+                    private void hideAcheivemnts()
+                    {
+                        destroyerAch.SetActive (false);
+                        firstClickUpAch.SetActive (false);
+                        firstClockUpAch.SetActive (false);
+                        firstClickAch.SetActive (false);
+                        looseAch.SetActive (false);
+                        winAch.SetActive (false);
+                    }
+                }
+                </code></pre>
+            </div>
+            
+            <script>
+            function openFile(evt, fileName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(fileName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+            </script>
+    
+        </body>
+    </html>

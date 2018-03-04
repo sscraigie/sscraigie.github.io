@@ -1,0 +1,348 @@
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html>
+        <head>
+            <title>Austin Craigie - SpaceShooter</title>
+
+            <!--unity info header-->
+             <meta charset="utf-8">
+             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+             <script src="games/unity/SpaceShooter/Build/UnityLoader.js"></script>
+             <script>
+                var gameInstance = UnityLoader.instantiate("gameContainer", "games/unity/SpaceShooter/Build/spaceshooter build.json");
+             </script>
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header" style="position: absolute">
+                <p id="header"> Austin Craigie - SpaceShooter</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "30%" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+
+            <!--THE Main Body goes here-->
+            <h2>Space Shooter - Unity Tutorial</h2>
+            <p style="text-align: left;"> Instructions:<br>
+            Move: WASD or the Arrow Keys<br>
+            Shoot: Right Click or Space<br></p>
+
+            <center style="padding-top: 3em; padding-bottom: 2em"><div id="gameContainer" style="width: 600px; height: 900px; margin: auto;"></div></center>
+
+            <p>These are the scripts running the game. (C#)</p>
+            <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+            <div class="tab">
+            <button class="tablinks" onclick="openFile(event, 'DestoryByTime.cs')" id="defaultOpen">DestoryByTime.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'DestroyByBoundry.cs')">DestroyByBoundry.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'DestroyByContact.cs')">DestroyByContact.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'GameControler.cs')">GameController.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'Mover.cs')">Mover.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'PlayerController.cs')">PlayerController.cs</button>
+            <button class="tablinks" onclick="openFile(event, 'Random_rotator.cs')">Random_rotator.cs</button>
+            </div>
+
+            <div id="DestoryByTime.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                public class DestoryByTime : MonoBehaviour {
+                    public float lifeTime;
+
+                    void Start() {
+                        Destroy (gameObject, lifeTime);
+                    }
+}
+
+                </code></pre>
+            </div>
+
+            <div id="DestroyByBoundry.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                public class DestroyByBoundry : MonoBehaviour {
+
+                    void OnTriggerExit(Collider other)
+                    {
+                        Destroy(other.gameObject);
+                    }
+                }		
+
+                </code></pre>
+            </div>
+
+            <div id="DestroyByContact.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                public class DestroyByContact : MonoBehaviour {
+
+                    public GameObject explosion;
+                    public GameObject playerExplosion;
+                    public int scoreValue;
+                    private GameControler gameControler;
+
+                    void Start ()
+                    {
+                        GameObject gameControlerObject = GameObject.FindWithTag ("GameControler");
+                        if (gameControlerObject != null)
+                        {
+                            gameControler = gameControlerObject.GetComponent <GameControler>();
+                        }
+                        if (gameControler == null)
+                        {
+                            Debug.Log ("Cannot find 'GameControler' script");
+                        }
+                    }
+
+                    void OnTriggerEnter(Collider other)
+                    {
+                        if (other.tag == "Boundary") 
+                        {
+                            return;
+                        }
+                        if (other.tag == "Player") 
+                        {
+                            Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
+                            gameControler.GameOver();
+                        }
+                        Instantiate (explosion, transform.position, transform.rotation);
+                        Destroy (other.gameObject);
+                        Destroy (gameObject);
+                        gameControler.AddScore(scoreValue);
+                    }
+                }
+
+                </code></pre>
+            </div>
+
+             <div id="GameControler.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                public class GameControler : MonoBehaviour {
+
+                    public GameObject hazard;
+                    public Vector3 spawnValues;
+                    public int hazardCount;
+                    public float spawnWait;
+                    public float startWait;
+                    public float waveWait;
+
+                    public GUIText scoreText;
+                    private int score;
+                    public GUIText restartText;
+                    public GUIText gameOverText;
+                    private bool restart;
+                    private bool gameOver;
+
+
+                    void Start()
+                    {
+                        gameOver = false;
+                        restart = false;
+                        restartText.text = "";
+                        gameOverText.text = "";
+                        score = 0;
+                        UpdateScore ();
+                        StartCoroutine (SpawnWaves ());
+                    }
+
+                    void Update()
+                    {
+                        if (restart) {
+                            if (Input.GetKeyDown (KeyCode.R)) {
+                                Application.LoadLevel (Application.loadedLevel);
+                            }
+                        }
+                    }
+
+                    IEnumerator SpawnWaves()
+                    {
+                        yield return new WaitForSeconds(startWait);
+                        while(true)
+                        {
+                            for (int count = 0; count < hazardCount; count++)
+                            {
+                                Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, 
+                                spawnValues.z);
+                                Quaternion spawnRotation = Quaternion.identity;
+                                Instantiate (hazard, spawnPosition, spawnRotation);
+                                yield return new WaitForSeconds (spawnWait);
+                            }
+                            yield return new WaitForSeconds (waveWait);
+
+                            if(gameOver)
+                            {
+                                restartText.text = "Press 'R' for Restart";
+                                restart = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    public void AddScore(int newScoreValue)
+                    {
+                        score += newScoreValue;
+                        UpdateScore();	
+                    }
+
+                    void UpdateScore()
+                    {
+                        scoreText.text = "Score: " + score;
+                    }
+
+                    public void GameOver()
+                    {
+                        gameOverText.text = "Game Over!";
+                        gameOver = true;
+                    }
+
+                }
+                </code></pre>
+            </div>
+
+              <div id="Mover.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                public class Mover : MonoBehaviour {
+
+                    public float speed;
+
+                    void start()
+                    {
+                        GetComponent<Rigidbody>().velocity = transform.forward * speed;
+                    }
+                }
+                </code></pre>
+            </div>
+
+              <div id="PlayerController.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+                using System.Collections;
+                using System.Collections.Generic;
+                using UnityEngine;
+
+                [System.Serializable]
+                public class Boundary
+                {
+                    public float xMin, xMax, zMin, zMax;
+                }
+
+                public class PlayerController : MonoBehaviour {
+
+                    public float speed;
+                    public float tilt;
+                    public Boundary boundary;
+
+                    public GameObject shot;
+                    public Transform shotSpawn;
+                    public float fireRate;
+
+                    private float nextFire;
+
+                    void FixedUpdate()
+                    {
+                        float moveHorizontal = Input.GetAxis("Horizontal");
+                        float moveVertical = Input.GetAxis("Vertical");
+                        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+                        GetComponent<Rigidbody>().velocity = movement * speed;
+
+                        GetComponent<Rigidbody>().position = new Vector3
+                        (
+                            Mathf.Clamp(GetComponent<Rigidbody>().position.x, boundary.xMin, boundary.xMax),
+                            0.0f,
+                            Mathf.Clamp(GetComponent<Rigidbody>().position.z, boundary.zMin, boundary.zMax)
+                        );
+
+                        GetComponent<Rigidbody>().rotation = Quaternion.Euler(0.0f, 0.0f, GetComponent<Rigidbody>().velocity.x  * -tilt);
+
+                    }
+
+                    void Update()
+                    {
+                        if ((Input.GetButton("Fire1") || Input.GetKeyDown(KeyCode.Space)) && Time.time > nextFire)
+                        {
+                            nextFire = Time.time + fireRate;
+                            Instantiate(shot, shotSpawn.position, shotSpawn.rotation);
+                            GetComponent<AudioSource>().Play ();
+                        }
+                    }
+                }
+                </code></pre>
+            </div>
+
+            <div id="Random_rotator.cs" class="tabcontent">
+            <pre id ="code" class="prettyprint"><code class = "language-cs">
+               using UnityEngine;
+               using System.Collections;
+
+               public class Random_rotator : MonoBehaviour
+               {
+                   public float tumble;
+
+                   void Start()
+                   {
+                       GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
+                   }
+               }
+                </code></pre>
+            </div>
+
+
+
+            <script>
+            function openFile(evt, fileName) {
+                var i, tabcontent, tablinks;
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                document.getElementById(fileName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
+
+            // Get the element with id="defaultOpen" and click on it
+            document.getElementById("defaultOpen").click();
+            </script>
+          
+    
+        </body>
+    </html>

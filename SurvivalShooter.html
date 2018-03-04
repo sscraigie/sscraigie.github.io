@@ -1,0 +1,59 @@
+
+<DOCTYPE HTML>
+    <link rel = "stylesheet" href = "CSS/style.css" type = "text/css"/>
+    <html>
+        <head>
+            <title>Austin Craigie - Survival Shooter</title>
+
+            <!--unity info header-->
+             <meta charset="utf-8">
+             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+             <script src="games/unity/SurvivalShooter/Build/UnityLoader.js"></script>
+             <script>
+              var gameInstance = UnityLoader.instantiate("gameContainer", "games/unity/SurvivalShooter/Build/survival shooter.json");
+             </script>
+        </head>
+
+        <body>
+            <!--header div-->
+            <div class="header" style="position: absolute">
+                <p id="header"> Austin Craigie - Survival Shooter</p>
+            </div>
+
+            <!--side bar div-->
+            <div class = "sidebar">
+                    <ul id="sidebar">
+                        <li><a href="index.html"> Home</a></li>
+                        <li><a href="About.html">About</a></li>
+                        <li><a href="Code.html">Code</a></li>
+                        <li><a href="Games.html">Games</a></li>
+                        <li><a href="Robotics.html">Robotics</a></li>
+                        <li><a href="Other.html">Other Cool Projects</a></li>
+                    </ul> 
+                   <center><img height = "30%" width="90%" src = "pics/ButchThumbs.png"/></center>
+                   <div class = "socalMedia"> 
+                       <a href = "https://www.github.com/apcraigie"><img  id="icon" src="pics/Icons/github.png"/></a>
+                       <a href="https://www.linkedin.com/in/apcraigie"><img  id="icon" src="pics/Icons/Linkedin.png"/></a>
+                       <a href="https://www.hackerrank.com/austin_craigie"> <img  id="icon" src="pics/Icons/hackerRank_logo.png"/></a>
+                     </div>  
+            </div>
+
+            <!--logo holder -->
+            <div class = "logoholder">
+                <img id="logo" src="pics/A-code.png"/>
+            </div>
+
+
+            <!--THE Main Body goes here-->
+            <h2>Survival shooter - Unity Tutorial</h2>
+            <p style="text-align: left;"> Instructions:<br>
+            Move: WASD or the Arrow Keys<br>
+            Shoot: Right Click or Space<br>
+            Aim: The Gun Points at the mouse</p>
+            <!--CHEAT: press and hold F key to increase your fire power-->
+
+            <center style="padding-bottom: 2em"><div id="gameContainer" style="width: 960px; height: 600px; margin: auto"></div></center>
+          
+    
+        </body>
+    </html>

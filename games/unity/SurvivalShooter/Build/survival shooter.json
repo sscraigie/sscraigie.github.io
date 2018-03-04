@@ -1,0 +1,9 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "survival shooter.data.unityweb",
+"asmCodeUrl": "survival shooter.asm.code.unityweb",
+"asmMemoryUrl": "survival shooter.asm.memory.unityweb",
+"asmFrameworkUrl": "survival shooter.asm.framework.unityweb",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#222C36"
+}

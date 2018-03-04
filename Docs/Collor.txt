@@ -1,0 +1,5 @@
+Dark gray - 333333, RGB: 51, 51, 51
+Med gray - 474747, RGB: 71, 71, 71
+light gray - 626262 RGB: 98, 98, 98
+green 008000 RGB: 0, 128, 0
+orenge E89424 RGB: 232, 148, 36
