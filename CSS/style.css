@@ -1,35 +1,35 @@
 /* need to set up styling for unordered lists, links and paragraphs*/
 
 body {
-    background-color: #222222;
+    background-color: #ffffff;
     margin-top: 16vh; margin-left: 13vw; margin-right: 0px; margin-bottom: 0px;
 }
 
 h1 {
-    color: #e89424;
+    color: #8ce146;
     text-align: center;
     font-size: 2.5vw;
 }
 
 h2 {
-    color: #008000;
+    color: #0a7d8f;
     text-align: center;
     font-size: 2.5vw;
 }
 
 p {
     align-content: left;
-    color: #E89424;
+    color: #8ce146;
     font-size: 2vw;
 }
 
 a:link, a:visited {
-    color: #e89424;
+    color: #8ce146;
     text-decoration: none;
 }
 
 a:hover {
-    color: #008000;
+    color: #0a7d8f;
     text-decoration: none;
 }
 
@@ -42,21 +42,21 @@ a:hover {
     position: absolute;
     right: 0px; left: 12vw; top: 0px;
     height: 16vh;
-    background: #333333;
+    background: #98004b;
 }
 
 .sidebar{
     position: fixed;
     top: 16vh; bottom: 0px; left: 0px;
     width: 12vw;
-    background: #333333;
+    background: #98004b;
 }
 .logoholder{
     position:fixed;
     top: 0px; left:0px; 
     height: 16vh;
     width:12vw;
-    background: #636363;
+    background: #9e1459;
 }
 
 .socalMedia {
@@ -78,12 +78,12 @@ margin-right: 5%;
 }
 
 ul #listHeader {
-    color: #E89424;
+    color: #8ce146;
     list-style: none;
 }
 
 ul {
-    color: #e89424;
+    color: #8ce146;
    font-size: 2vw;
 }
 
@@ -96,10 +96,10 @@ img#logo{
 
 
 #header{
-    color: #E89424;
+    color: #8ce146;
     margin: 4vh;
     text-align: center;
-    text-shadow: 3px 3px #008000;
+    text-shadow: 3px 3px #0a7d8f;
     font-size: 5vw;
 }
 
@@ -108,7 +108,7 @@ ul#sidebar{
     font-size: 1.75vw;
     margin-left: .25vw; 
     align-content: left;
-    color: #E89424;
+    color: #8ce146;
     text-decoration: none;
 }
 
@@ -122,11 +122,11 @@ ul#sidebar{
 }
 
 img#green {
-    border: 1em double #008000;
+    border: 1em double #0a7d8f;
 }
 
 img#orange { 
-    border: 1em double #E89424;
+    border: 1em double #8ce146;
 }
 
 /* Bar Graph Code - help from https://www.otreva.com/blog/create-a-htmlcss-horizontal-bar-graph/ for an exsample */
@@ -164,52 +164,52 @@ ul.bargraph li.title{
 }
 
 ul.bargraph li.level10{
-    background: #e89424;
+    background: #8ce146;
     width:100%;
 }
 
 ul.bargraph li.level9{
-    background: #e89424;
+    background: #8ce146;
     width:90%;
 }
 
 ul.bargraph li.level8{
-    background: #e89424;
+    background: #8ce146;
     width:80%;
 }
 
 ul.bargraph li.level7{
-    background: #e89424;
+    background: #8ce146;
     width:70%;
 }
 
 ul.bargraph li.level6{
-    background: #e89424;
+    background: #8ce146;
     width:60%;
 }
 
 ul.bargraph li.level5{
-    background: #e89424;
+    background: #8ce146;
     width:50%;
 }
 
 ul.bargraph li.level4{
-    background: #e89424;
+    background: #8ce146;
     width:40%;
 }
 
 ul.bargraph li.level3{
-    background: #e89424;
+    background: #8ce146;
     width:30%;
 }
 
 ul.bargraph li.level2{
-    background: #e89424;
+    background: #8ce146;
     width:20%;
 }
 
 ul.bargraph li.level1{
-    background: #e89424;
+    background: #8ce146;
     width:10%;
 }
 
@@ -219,14 +219,14 @@ ul.bargraph li.level1{
 /* Style the tab */
 div.tab {
     overflow: hidden;
-    border: 3px solid #E89424;
+    border: 3px solid #8ce146;
     background-color: #222222;
     margin: 2em;
     margin-bottom: 0em;
 }
 /* Style the buttons inside the tab */
 div.tab button {
-    color: #E89424;
+    color: #8ce146;
     font-size: 1vw;
     background-color: inherit;
     float: left;
@@ -251,11 +251,11 @@ div.tab button.active{
 .tabcontent {
     display: none;
     padding: 6px 12px;
-    border: 3px solid #E89424;
+    border: 3px solid #8ce146;
     border-top: none;
     margin: 2em;
     margin-top:0em;
-    background: #333333;
+    background: #98004b;
 }
 
 .tabcontent{
@@ -281,7 +281,7 @@ code {
 }
 
 pre#code{
-    border: 3px solid #E89424;
+    border: 3px solid #8ce146;
      border-radius: 10px;
     background: #ffffff;
 }
